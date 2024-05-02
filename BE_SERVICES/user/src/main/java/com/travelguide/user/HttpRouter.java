@@ -1,0 +1,28 @@
+package com.travelguide.user;
+
+import static com.travelguide.user.auth.constants.AuthConstants.USER_LOGIN_URI;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+
+import com.travelguide.user.auth.web.AuthHandler;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.server.RequestPredicates;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
+
+@Configuration
+public class HttpRouter {
+  private final AuthHandler authHandler;
+  public HttpRouter(AuthHandler authHandler) {
+    this.authHandler = authHandler;
+  }
+
+  @Bean
+  RouterFunction<ServerResponse> routes() {
+    return route()
+        .POST(USER_LOGIN_URI, RequestPredicates.accept(MediaType.APPLICATION_JSON), authHandler)
+        .build();
+  }
+}
